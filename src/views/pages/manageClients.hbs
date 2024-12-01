@@ -1,0 +1,1126 @@
+<!-- manageClients.hbs -->
+<link rel="stylesheet" href="/static/css/manageClients.css">
+
+<div class="content-wrapper">
+    <div class="header-section">
+        <h1 dir="rtl">ברוך הבא {{officeWorker.full_name}}</h1>
+        <!-- Display the 4 widgets above the table -->
+        <div class="dashboard-widgets">
+            <div class="widget">
+                <p>הלקוחות שלך</p>
+                <h3>{{clientsCount}}</h3> <!-- Number of clients -->
+            </div>
+            <div class="widget">
+                <p>ימי עבודה</p>
+                <h3 id="workingDays">...טוען</h3> <!-- Number of days office worker added hours -->
+            </div>
+            <div class="widget">
+                <p>שעות עבודה</p>
+                <h3 id="workingHours">...טוען</h3> <!-- Total hours added -->
+            </div>
+        </div>
+
+    </div>
+
+    <div dir="rtl">
+        <button onclick="showPopup()">הוספת לקוח</button>
+        <button id="deleteClientButton" onclick="openDeleteClientPopup()">מחיקת לקוח</button>
+        <button onclick="openMailingPopup()">רשימת דיוור</button>
+    </div>
+
+    <!-- Client Table -->
+    {{#if clients.length}}
+    <table border="1" dir="rtl">
+        <thead>
+            <tr>
+                <th>שם לקוח</th>
+                <th>סוג לקוח</th>
+                <th>כתובת</th>
+                <th>מספר טלפון נייד</th>
+                <th>מספר טלפון ביתי</th>
+                <th>תיק מס הכנסה</th>
+                <th>מספר תיק מעמ</th>
+                <th>מייל</th>
+                <th>מסמכים</th>
+                <th>פעולות</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each clients}}
+            <tr>
+                <td>{{this.client_name}}</td>
+                <td>{{this.client_type}}</td>
+                <td>{{this.address.city}}, {{this.address.street}}, {{this.address.number}}, {{this.address.zip_code}}
+                </td>
+                <td>{{this.mobile_number}}</td>
+                <td>{{this.home_number}}</td>
+                <td>{{this.income_tax_file}}</td>
+                <td>{{this.vat_file_number}}</td>
+                <td>{{this.email}}</td>
+                <td>
+                    {{#if this.documents}}
+                    <ul>
+                        <li>
+                            <button onclick="openTaxDocumentsPopup('{{this._id}}')">מסמכים של דוח מס</button>
+                            <button onclick="openCapitalDeclarationDocumentsPopup('{{this._id}}')">מסמכים של הצהרת
+                                הון</button>
+                            </button>
+                        </li>
+                    </ul>
+                    {{else}}
+                    אין מסמכים
+                    {{/if}}
+                </td>
+                <td>
+                    <button onclick="openAddHoursPopup('{{this._id}}')">הוספת שעות</button>
+
+                    <button onclick="openViewHoursPopup('{{this._id}}')">צפייה בשעות</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <p>לא נמצאו לקוחות.</p>
+    {{/if}}
+</div>
+
+<!-- פופאפ להוספת לקוח -->
+<div dir="rtl" id="addclient-popup" class="popup">
+    <span class="close" id="close-addclient-popup">×</span>
+    <h2 style="text-align: center; color: black;">הוספת לקוח חדש</h2>
+    <form id="addClientForm" action="/api/officeWorkers/addClient" method="POST">
+        <input type="hidden" name="worker_id" value="{{officeWorker._id}}">
+
+        <div>
+            <label for="client_name">שם לקוח:</label>
+            <input type="text" id="client_name" name="client_name" required>
+        </div>
+        <div>
+            <label for="client_type">סוג לקוח:</label>
+            <select id="client_type" name="client_type" required>
+                <option value="Companies">חברות</option>
+                <option value="Licensed dealer">עוסק מורשה</option>
+                <option value="Exempt dealer">עוסק פטור</option>
+                <option value="Controlling employee">שכירים ובעלי שליטה</option>
+                <option value="Other">אחרים</option>
+                <option value="General">כללי</option>
+            </select>
+        </div>
+        <div>
+            <label for="city">עיר:</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+        <div>
+            <label for="street">רחוב:</label>
+            <input type="text" id="street" name="street" required>
+        </div>
+        <div>
+            <label for="number">מספר:</label>
+            <input type="number" id="number" name="number" required>
+        </div>
+        <div>
+            <label for="zip_code">מיקוד:</label>
+            <input type="text" id="zip_code" name="zip_code">
+        </div>
+        <div>
+            <label for="mobile_number">מספר טלפון נייד:</label>
+            <input type="text" id="mobile_number" name="mobile_number" required>
+        </div>
+        <div>
+            <label for="home_number">מספר טלפון ביתי:</label>
+            <input type="text" id="home_number" name="home_number">
+        </div>
+        <div>
+            <label for="income_tax_file">תיק מס הכנסה:</label>
+            <input type="number" id="income_tax_file" name="income_tax_file" required>
+        </div>
+        <div>
+            <label for="vat_file_number">מספר תיק מעמ:</label>
+            <input type="number" id="vat_file_number" name="vat_file_number" required>
+        </div>
+        <div>
+            <label for="email">מייל:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">סיסמה:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <!-- הודעת טעינה שמופיעה בזמן שליחת הטופס -->
+        <p id="loadingMessageClient"
+            style="display:none; color: blue; font-weight: bold; text-align: center; color: #55B0AF;">נא להמתין, הוספת
+            לקוח
+            מתבצעת...</p>
+        <button type="submit">הוסף לקוח</button>
+    </form>
+</div>
+
+<!-- פופאפ למחיקת לקוח -->
+<div dir="rtl" id="deleteClientPopup" class="popup">
+    <span class="close" id="close-deleteclient-popup">×</span>
+    <h3>בחר לקוח למחיקה</h3>
+    <form id="deleteClientForm" onsubmit="deleteClient(event)">
+        <select id="clientSelect" name="client_id" required>
+            <option value="">בחר לקוח</option>
+            {{#each clients}}
+            <option value="{{this._id}}">{{this.client_name}}</option>
+            {{/each}}
+        </select>
+        <br><br>
+        <!-- הודעת טעינה מותאמת לפופאפ מחיקת לקוח -->
+        <p id="loadingMessageDeleteClient"
+            style="display:none; color: blue; font-weight: bold; text-align: center; color: #55B0AF;">נא להמתין, מחיקת
+            לקוח
+            מתבצעת...</p>
+
+        <button id="deleteButton" type="submit">מחיקת לקוח</button>
+    </form>
+</div>
+
+
+
+<!-- פופאפ לרשימת דיוור -->
+<div dir="rtl" id="mailingListPopup" class="popup">
+    <span class="close" id="close-mailinglist-popup">×</span>
+    <h3 dir="rtl">רשימת דיוור של עובד משרד</h3>
+    <form id="mailingListForm">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllClients" onclick="toggleSelectAll(this)">בחר הכל</th>
+                    <th>שם לקוח</th>
+                    <th>מייל</th>
+                </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+                {{#each clients}}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selectedClients" value="{{this._id}}">
+                        <input type="hidden" name="clientEmail" value="{{this.email}}">
+                    </td>
+                    <td>{{this.client_name}}</td>
+                    <td>{{this.email}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <textarea dir="rtl" id="emailMessage" placeholder="הכנס הודעה כאן..."></textarea>
+
+        <!-- הודעת טעינה -->
+        <p id="loadingMessageMailing"
+            style="display:none; color: blue; font-weight: bold; text-align: center; color: #55B0AF;">נא להמתין, שליחת
+            המיילים
+            מתבצעת...</p>
+
+        <button type="button" onclick="sendEmails()">שליחת מייל</button>
+    </form>
+</div>
+
+<!-- פופאפ להוספת שעות -->
+<div dir="rtl" id="addHoursPopup" class="popup">
+    <span class="close" id="close-addhours-popup">×</span>
+    <form id="addHoursForm" method="POST">
+        <input type="hidden" name="client_id" id="addHoursClientId" required>
+        <input type="hidden" name="worker_id" value="{{officeWorker._id}}" required>
+
+        <label for="day_of_work">יום עבודה:</label>
+        <input type="date" id="day_of_work" name="day_of_work" required><br>
+
+        <label for="start_hour">שעת התחלה:</label>
+        <input type="time" id="start_hour" name="start_hour" required><br>
+
+        <label for="end_hour">שעת סיום:</label>
+        <input type="time" id="end_hour" name="end_hour" required><br>
+
+        <!-- הודעת טעינה מותאמת -->
+        <p id="loadingMessageHours"
+            style="display:none; color: blue; font-weight: bold; text-align: center; color: #55B0AF;">נא להמתין, הוספת
+            שעות
+            מתבצעת...</p>
+
+        <button type="submit">הוסף שעות</button>
+    </form>
+</div>
+
+
+
+
+
+<!-- פופאפ לצפייה בשעות -->
+<div dir="rtl" id="viewHoursPopup" class="popup">
+    <span class="close" id="close-viewhours-popup">×</span>
+    <div id="viewHoursContent"></div> <!-- כאן יוצג הטופס אם יש שעות -->
+    <div id="loadingMessageViewHours" style="display: block; color: #55B0AF; text-align: center; font-weight: bold;"></div>
+
+</div>
+
+
+
+
+<!-- פופאפ מסמכי דוח מס -->
+<div dir="rtl" id="taxDocumentsPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" id="close-taxdocuments-popup">×</span>
+        <div id="taxDocumentsContent">
+            <div id="taxDocumentsHeader">
+                <h3>מסמכי דוח מס</h3>
+                <h4 id="taxDocumentsCounts">כמות מסמכים שהועלו:</h4>
+                <h4 id="taxDocumentsTreatedCounts"></h4>
+            </div>
+            <ul id="taxDocumentsList" style="width: 95%;overflow-x:auto;margin:0 auto 10px auto;"></ul>
+        </div>
+        <div id="taxDocumentDetails"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- פופאפ מסמכי הצהרת הון -->
+<div dir="rtl" id="capitalDeclarationDocumentsPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" id="close-capitaldocuments-popup">×</span>
+        <div id="capitalDocumentsContent">
+            <div id="capitalDocumentsHeader">
+                <h3 id="capitalDocumentsTitle">מסמכי הצהרת הון</h3>
+                <h4 id="capitalDocumentsCounts">כמות מסמכים שהועלו:</h4>
+                <h4 id="capitalDocumentsTreatedCounts"></h4>
+            </div>
+            <ul id="capitalDocumentsList" style="width: 95%;overflow-x:auto;margin:0 auto 10px auto;"></ul>
+        </div>
+        <div id="capitalDocumentDetails"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Overlay -->
+<div id="overlay" class="overlay" onclick="closeAllPopups()"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+
+    // סגירת פופאפ העלאת טופס לדוח מס
+    document.getElementById("close-addclient-popup").onclick = function () {
+        document.getElementById("addclient-popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    // סגירת פופאפ הצהרת הון
+    document.getElementById("close-deleteclient-popup").onclick = function () {
+        document.getElementById("deleteClientPopup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    // סגירת פופאפ עריכת פרטים
+    document.getElementById("close-mailinglist-popup").onclick = function () {
+        document.getElementById("mailingListPopup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    };
+    // סגירת פופאפ העלאת טופס לדוח מס
+    document.getElementById("close-addhours-popup").onclick = function () {
+        document.getElementById("addHoursPopup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    // סגירת פופאפ הצהרת הון
+    document.getElementById("close-viewhours-popup").onclick = function () {
+        document.getElementById("viewHoursPopup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    // פונקציה לסגירת הפופאפ
+    function closePopup(popupId) {
+        const popup = document.getElementById(popupId);
+        if (popup) {
+            popup.style.display = 'none'; // מסתיר את הפופאפ
+        } else {
+            console.error(`לא נמצא פופאפ עם ID ${popupId}`);
+        }
+    }
+
+
+    // מאזין לסגירת פופאפ מסמכי דוח מס
+    document.getElementById('close-taxdocuments-popup').onclick = function () {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('taxDocumentsPopup').style.display = 'none';
+    };
+    // מאזין לסגירת פופאפ מסמכי הצהרת הון
+    document.getElementById('close-capitaldocuments-popup').onclick = function () {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('capitalDeclarationDocumentsPopup').style.display = 'none';
+    };
+
+
+
+
+    function openCapitalDeclarationDocumentsPopup(clientId) {
+        document.getElementById('overlay').style.display = 'block';
+        const documentsList = document.getElementById('capitalDocumentsList');
+        const documentDetails = document.getElementById('capitalDocumentDetails');
+        const header = document.getElementById('capitalDocumentsHeader');
+        const countsElement = document.getElementById('capitalDocumentsCounts');
+        const treatedCountsElement = document.getElementById('capitalDocumentsTreatedCounts');
+
+        // Reset the counts and document details
+        countsElement.style.display = 'none'; // Hide the counts initially
+        treatedCountsElement.style.display = 'none'; // Hide the treated/untreated counts initially
+        countsElement.textContent = 'כמות מסמכים שהועלו:';
+        treatedCountsElement.innerHTML = ''; // Clear any previous counts
+        documentDetails.innerHTML = '';
+
+        // Fetch counts
+        fetch(`/api/officeWorkers/clients/${clientId}/capitalDocuments/counts`)
+            .then(response => response.json())
+            .then(counts => {
+                countsElement.textContent = `כמות מסמכים שהועלו: ${counts.total}`;
+                treatedCountsElement.innerHTML = `טופלו: <span class="treated">${counts.treated}</span>, לא טופלו: <span class="untreated">${counts.untreated}</span>`;
+                countsElement.style.display = 'block'; // Show the total counts
+                treatedCountsElement.style.display = 'block'; // Show the treated/untreated counts
+            })
+            .catch(error => {
+                console.error('Error fetching counts:', error);
+                countsElement.textContent = 'שגיאה בטעינת כמות המסמכים';
+                countsElement.style.display = 'block'; // Show the error message
+                treatedCountsElement.style.display = 'none'; // Hide the treated/untreated counts in case of error
+            });
+
+        // Existing code to fetch and display documents
+        // Hide header and show loading spinner
+        header.style.display = 'none';
+        documentsList.innerHTML = `<div class="spinner-container">
+        <p class="spinner-text">טוען...</p>
+        <div class="lds-spinner">
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+    </div>`;
+
+        // Display the popup
+        document.getElementById('capitalDeclarationDocumentsPopup').style.display = 'block';
+
+        // Fetch documents
+        fetch(`/api/officeWorkers/clients/${clientId}/capitalDocuments`)
+            .then(response => response.json())
+            .then(data => {
+                header.style.display = 'block'; // Show the header
+                if (data && data.documents && data.documents.length > 0) {
+                    // Sort the documents by numbers and text
+                    data.documents.sort((a, b) => {
+                        const numA = parseInt(a.match(/\d+/), 10) || 0;
+                        const numB = parseInt(b.match(/\d+/), 10) || 0;
+                        if (numA !== numB) {
+                            return numA - numB;
+                        }
+                        return a.localeCompare(b);
+                    });
+
+                    // Clear the list and append sorted items
+                    documentsList.innerHTML = '';
+                    data.documents.forEach(doc => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<button onclick="showCapitalDocumentDetails('${doc}', '${clientId}')">${doc}</button>`;
+                        documentsList.appendChild(listItem);
+                    });
+                } else {
+                    documentsList.innerHTML = '<p style="color: red; text-align: center;">אין מסמכים זמינים.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching documents:', error);
+                documentsList.innerHTML = '<p style="color: red; text-align: center;">שגיאה בטעינת המסמכים</p>';
+            });
+    }
+
+
+
+
+
+
+
+
+
+
+    // פונקציה להצגת פרטי מסמך דוח מס
+    function showTaxDocumentDetails(fileName, clientId) {
+        const documentDetails = document.getElementById('taxDocumentDetails');
+        documentDetails.innerHTML = '<p style="text-align: center; color: #55B0AF; font-weight: bold;">טוען את המסמך...</p>';
+
+        // setTimeout(() => {
+        console.log("fileName", fileName);
+        fetch(`/api/officeWorkers/clients/documents/all`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fileName: fileName, client_id: clientId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                documentDetails.innerHTML = '';
+                data.documents?.forEach((document) => {
+                    const docLink = document.Document_url;
+                    const dateUploaded = new Date(document.dateUploaded).toLocaleDateString('he-IL');
+                    documentDetails.innerHTML += `
+                            <div id="content-aligner" class="docs">
+                                <p>תאריך העלאה: ${dateUploaded}</p>
+                                <button onclick="window.open('${docLink}', '_blank')">
+                                    קישור למסמך
+                                </button>
+                                ${!document.isTreated ?
+                            `<button onclick="setAsTreated('${clientId}','documents','${docLink}', true)">סמן כטופל</button>`
+                            :
+                            `<button onclick="setAsTreated('${clientId}','documents','${docLink}', false)">סמן כלא טופל</button>`
+                        }
+                            </div>
+                        `;
+                    documentDetails.scrollLeft += 500;
+                    documentDetails.innerHTML += `<div id="loadingMessageTreated" style="display: none; color: #55B0AF; text-align: center; font-weight: bold;">נא להמתין...</div>`;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching document details:', error);
+                documentDetails.innerHTML = '<p style="color: red; text-align: center;">שגיאה בטעינת המסמך</p>';
+            });
+        // }, 2000);
+    }
+
+    // פונקציה להצגת פרטי מסמך הצהרת הון
+    function showCapitalDocumentDetails(fileName, clientId) {
+        const documentDetails = document.getElementById('capitalDocumentDetails');
+        documentDetails.innerHTML = '<p style="text-align: center; color: #55B0AF; font-weight: bold;">טוען את המסמך...</p>';
+
+        // setTimeout(() => {
+        fetch(`/api/officeWorkers/clients/documents/all`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fileName: fileName, client_id: clientId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                documentDetails.innerHTML = '';
+                data.documents.forEach((document) => {
+                    const docLink = document.Document_url;
+                    const dateUploaded = new Date(document.dateUploaded).toLocaleDateString('he-IL');
+                    documentDetails.innerHTML += `
+                            <div id="content-aligner" class="docs">
+                                <p>תאריך העלאה: ${dateUploaded}</p>
+                                <button onclick="window.open('${docLink}', '_blank')">
+                                    קישור למסמך
+                                </button>
+                                 ${!document.isTreated ?
+                            `<button onclick="setAsTreated('${clientId}','CapitalDeclarationDocuments','${docLink}', true)">סמן כטופל</button>`
+                            :
+                            `<button onclick="setAsTreated('${clientId}','CapitalDeclarationDocuments','${docLink}', false)">סמן כלא טופל</button>`
+                        }
+                            </div>
+                        `;
+                    documentDetails.innerHTML += `<div id="loadingMessageTreated" style="display: none; color: #55B0AF; text-align: center; font-weight: bold;">נא להמתין...</div>`;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching document details:', error);
+                documentDetails.innerHTML = '<p style="color: red; text-align: center;">שגיאה בטעינת המסמך</p>';
+            });
+        // }, 2000);
+    }
+
+    let search = window.location.search;
+    if (search) {
+        let params = new URLSearchParams(search);
+        let message = params.get('message');
+        if (message) {
+            alert(message);
+            params.delete('message');
+            window.location.search = params.toString();
+        }
+    }
+    document.getElementById('addClientForm').addEventListener('submit', function (event) {
+        const loadingMessage = document.getElementById('loadingMessageClient');
+        loadingMessage.style.display = 'block'; // הצגת הודעת טעינה
+
+    });
+
+
+
+
+
+
+
+    // פונקציה להצגת פופאפ להוספת לקוח
+    function showPopup() {
+        document.getElementById('addclient-popup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    // פונקציה לפתיחת פופאפ למחיקת לקוח
+    function openDeleteClientPopup() {
+        document.getElementById('deleteClientPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    // פונקציה למחיקת לקוח מבלי לרענן את הדף
+    function deleteClient(event) {
+        event.preventDefault();
+
+        const loadingMessage = document.getElementById('loadingMessageDeleteClient');
+        loadingMessage.style.display = 'block'; // הצגת הודעת טעינה
+
+        const clientId = document.getElementById('clientSelect').value;
+        const workerId = "{{officeWorker._id}}";
+
+        fetch(`/api/officeWorkers/deleteClient/${clientId}?worker_id=${workerId}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('הלקוח נמחק בהצלחה.'); // הודעת הצלחה בעברית
+                    window.location.reload(); // רענון הדף לאחר אישור המשתמש
+                } else {
+                    alert('מחיקת הלקוח נכשלה.'); // הודעת שגיאה בעברית
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting client:', error);
+                alert('שגיאה במחיקת הלקוח.'); // הודעת שגיאה בעברית
+            });
+    }
+
+
+
+    // פעולה שמעדכנת האם המסמך טופל או לא
+    async function setAsTreated(client_id, array, Document_url, isTreated) {
+        let objToSend = {
+            client_id,
+            array,
+            Document_url,
+            isTreated
+        };
+
+        document.getElementById('loadingMessageTreated').style.display = 'block';
+
+        try {
+            let response = await fetch('/api/officeWorkers/clients/documents/treated', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(objToSend)
+            });
+
+            if (response.ok) {
+                let updated = await response.json();
+                console.log(updated);
+
+                // הצגת הודעת alert מתאימה ולאחר מכן הפניה מחדש לדף הנוכחי
+                if (isTreated) {
+                    document.getElementById('loadingMessageTreated').innerText = 'המסמך סומן כטופל בהצלחה. נא להמתין לרענון הדף...';
+                } else {
+                    document.getElementById('loadingMessageTreated').innerText = 'המסמך סומן כלא טופל בהצלחה. נא להמתין לרענון הדף...';
+                }
+                window.location.reload();
+            } else {
+                console.error('Error updating document:', response.statusText);
+                document.getElementById('workingDays').innerText = 'Error';
+                document.getElementById('workingHours').innerText = 'Error';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('workingDays').innerText = 'Error';
+            document.getElementById('workingHours').innerText = 'Error';
+        }
+    }
+
+
+
+
+    // פונקציה לסגירת כל הפופאפים
+    function closeAllPopups() {
+        const popups = document.querySelectorAll('.popup');
+        popups.forEach(popup => popup.style.display = 'none');
+        document.getElementById('overlay').style.display = 'none';
+    }
+    // משתנה כדי לעקוב האם הפופאפ נפתח קודם
+    let taxPopupLoaded = false;
+    let capitalPopupLoaded = false;
+
+
+    // פונקציה לפתיחת פופאפ מסמכי דוח מס
+    function openTaxDocumentsPopup(clientId) {
+        document.getElementById('overlay').style.display = 'block';
+        const documentsList = document.getElementById('taxDocumentsList');
+        const documentDetails = document.getElementById('taxDocumentDetails');
+        const header = document.getElementById('taxDocumentsHeader');
+        const countsElement = document.getElementById('taxDocumentsCounts');
+        const treatedCountsElement = document.getElementById('taxDocumentsTreatedCounts');
+
+        // Reset the counts and document details
+        countsElement.style.display = 'none'; // Hide the counts initially
+        treatedCountsElement.style.display = 'none'; // Hide the treated/untreated counts initially
+        countsElement.textContent = 'כמות מסמכים שהועלו:';
+        treatedCountsElement.innerHTML = ''; // Clear any previous counts
+        documentDetails.innerHTML = '';
+
+        // Fetch counts
+        fetch(`/api/officeWorkers/clients/${clientId}/taxDocuments/counts`)
+            .then(response => response.json())
+            .then(counts => {
+                countsElement.textContent = `כמות מסמכים שהועלו: ${counts.total}`;
+                treatedCountsElement.innerHTML = `טופלו: <span class="treated">${counts.treated}</span>, לא טופלו: <span class="untreated">${counts.untreated}</span>`;
+                countsElement.style.display = 'block'; // Show the total counts
+                treatedCountsElement.style.display = 'block'; // Show the treated/untreated counts
+            })
+            .catch(error => {
+                console.error('Error fetching counts:', error);
+                countsElement.textContent = 'שגיאה בטעינת כמות המסמכים';
+                countsElement.style.display = 'block'; // Show the error message
+                treatedCountsElement.style.display = 'none'; // Hide the treated/untreated counts in case of error
+            });
+
+        // Existing code to fetch and display documents
+        // Hide header and show loading spinner
+        header.style.display = 'none';
+        documentsList.innerHTML = `<div class="spinner-container">
+        <p class="spinner-text">טוען...</p>
+        <div class="lds-spinner">
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+    </div>`;
+
+        // Display the popup
+        document.getElementById('taxDocumentsPopup').style.display = 'block';
+
+        // Fetch documents
+        fetch(`/api/officeWorkers/clients/${clientId}/taxDocuments`)
+            .then(response => response.json())
+            .then(data => {
+                header.style.display = 'block'; // Show the header
+                if (data && data.documents && data.documents.length > 0) {
+                    // Sort the documents by numbers and text
+                    data.documents.sort((a, b) => {
+                        const numA = parseInt(a.match(/\d+/), 10) || 0;
+                        const numB = parseInt(b.match(/\d+/), 10) || 0;
+                        if (numA !== numB) {
+                            return numA - numB;
+                        }
+                        return a.localeCompare(b);
+                    });
+
+                    // Clear the list and append sorted items
+                    documentsList.innerHTML = '';
+                    data.documents.forEach(doc => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<button onclick="showTaxDocumentDetails('${doc}', '${clientId}')">${doc}</button>`;
+                        documentsList.appendChild(listItem);
+                    });
+                } else {
+                    documentsList.innerHTML = '<p style="color: red; text-align: center;">אין מסמכים זמינים</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching documents:', error);
+                documentsList.innerHTML = '<p style="color: red; text-align: center;">שגיאה בטעינת המסמכים</p>';
+            });
+    }
+
+
+
+
+    // פונקציה לפתיחת פופאפ של מערכת דיוור
+    function openMailingPopup() {
+        emailjs.init({
+            publicKey: 'EXJwMadS5WkmmYCID',
+        });
+        document.getElementById('mailingListPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    // פונקציה לפתיחת פופאפ להוספת שעות ללקוח
+    function openAddHoursPopup(clientId) {
+        document.getElementById('addHoursClientId').value = clientId;
+        document.getElementById('addHoursPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    document.getElementById('addHoursForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // מונע את השליחה הרגילה של הטופס
+
+        // הצגת הודעת טעינה מותאמת לפופאפ
+        const loadingMessage = document.getElementById('loadingMessageHours');
+        loadingMessage.style.display = 'block';
+
+        const submitButton = event.target.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        // השגת הנתונים מהטופס
+        const worker_id = document.querySelector('input[name="worker_id"]').value;
+        const client_id = document.getElementById('addHoursClientId').value;
+        const day_of_work = document.getElementById('day_of_work').value;
+        const start_hour = document.getElementById('start_hour').value;
+        const end_hour = document.getElementById('end_hour').value;
+
+        // וודא שהכל תקין לפני שליחה
+        if (!worker_id || !client_id || !day_of_work || !start_hour || !end_hour) {
+            alert('כל השדות חובה למילוי');
+            submitButton.disabled = false;
+            return;
+        }
+
+        // יצירת אובייקט JSON לשליחה
+        const data = {
+            worker_id,
+            client_id,
+            day_of_work,
+            start_hour,
+            end_hour
+        };
+
+        try {
+            const response = await fetch('/api/workingHours/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                loadingMessage.innerText = 'השעות נוספו בהצלחה! נא להמתין לרענון הדף...';
+                // הפניה לדף של העובד לאחר הצלחה
+                window.location.href = result.redirectUrl;
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error('Error adding hours:', error);
+            alert('שגיאה במערכת.');
+        } finally {
+            submitButton.disabled = false; // לאפשר את הכפתור שוב
+        }
+    });
+
+
+
+    function openViewHoursPopup(clientId) {
+        // איפוס התוכן בהתחלה והצגת הודעת טעינה
+        document.getElementById('viewHoursContent').innerHTML = `
+        <div class="spinner-container">
+            <p class="spinner-text">טוען...</p>
+            <div class="lds-spinner">
+                <div></div><div></div><div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div><div></div><div></div>
+            </div>
+        </div>
+    `;
+
+        document.getElementById('loadingMessageViewHours').style.display = 'none';
+
+        fetch(`/api/workingHours/client/${clientId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data received from server:', data);
+
+                let hoursHtml = ''; // כאן נשמור את ה-HTML שנציג בפופאפ
+
+                if (data.client_hours && data.client_hours.length > 0) {
+                    // מיון השעות לפי תאריך
+                    data.client_hours.sort((a, b) => new Date(a.day_of_work) - new Date(b.day_of_work));
+
+                    // בדיקה אם כל השדות ריקים ולהצגת הודעה במקרה כזה
+                    const allFieldsEmpty = data.client_hours.every(hour =>
+                        !hour.day_of_work && !hour.start_hour && !hour.end_hour
+                    );
+
+                    if (allFieldsEmpty) {
+                        hoursHtml = `
+                        <p style="text-align: center;">אין ללקוח זה שעות להזין.</p>`;
+                    } else {
+                        // הוספת תיבות בחירה לבחירת שנה, חודש ויום
+                        hoursHtml += `
+                        <h3 id="hours-title">שעות העבודה שהעובד משרד הזין ללקוח</h3>
+                        <div>
+                            <input id="date-input" type="date">
+                            <button id="search-button" onclick="filterByDate()">חיפוש</button>
+                        </div>`;
+
+                        // הכנת הטפסים אך לא להציגם מיד
+                        hoursHtml += `<ul id="fix-hours-display" style="display: none;">`;
+
+                        data.client_hours.forEach((hour, index) => {
+                            let dayOfWork = hour.day_of_work ? hour.day_of_work.split("T")[0] : '';
+                            const startHour = hour.start_hour || '';
+                            const endHour = hour.end_hour || '';
+
+                            hoursHtml += `
+                        <div class="work-hour" data-day-of-work="${dayOfWork}">
+                            <form id="viewHoursForm${index}">
+                                <label for="dayOfWork${index}">יום עבודה:</label>
+                                <input type="date" id="dayOfWork${index}" name="day_of_work" value="${dayOfWork}"><br>
+
+                                <label for="startHour${index}">שעת התחלה:</label>
+                                <input type="time" id="startHour${index}" name="start_hour" value="${startHour}"><br>
+
+                                <label for="endHour${index}">שעת סיום:</label>
+                                <input type="time" id="endHour${index}" name="end_hour" value="${endHour}"><br>
+
+                                <button type="button" onclick="saveHour('${clientId}', '${hour._id}', ${index})">שמור שעות</button>
+                            </form>
+                        </div>`;
+                        });
+
+                        hoursHtml += '</ul>';
+                    }
+                } else {
+                    // אם אין שעות בכלל, נציג הודעה על כך שאין שעות ללקוח
+                    hoursHtml = `
+                    <p style="text-align: center;">אין ללקוח זה שעות להזין.</p>`;
+                }
+
+                // הצגת התוכן שנבנה
+                document.getElementById('viewHoursContent').innerHTML = hoursHtml;
+            })
+            .catch(error => {
+                console.error('Error fetching hours:', error);
+                document.getElementById('viewHoursContent').innerText = 'שגיאה בטעינת שעות.';
+            });
+
+        document.getElementById('viewHoursPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function filterByDate() {
+        const dateTimePicker = document.getElementById('date-input');
+        const selectedDate = dateTimePicker.value; // התאריך שנבחר
+        const workHours = document.querySelectorAll(".work-hour"); // כל השעות בעמוד
+
+        let hasResults = false; // משתנה בוליאני לבדוק אם נמצאו תוצאות
+
+        // סינון והצגת שעות לפי התאריך שנבחר
+        workHours.forEach(function (hour) {
+            const dayOfWork = hour.getAttribute("data-day-of-work");
+
+            if (selectedDate === dayOfWork) {
+                hour.style.display = "block"; // הצגת שעת עבודה
+                hasResults = true; // תוצאה נמצאה
+            } else {
+                hour.style.display = "none"; // הסתרת שעת עבודה
+            }
+        });
+
+        // הצגת/הסתרת אזור הטפסים לפי האם נמצאו תוצאות
+        document.getElementById("fix-hours-display").style.display = hasResults ? "block" : "none";
+
+        // הודעה במקרה שלא נמצאו שעות לתאריך שנבחר
+        const viewHoursContent = document.getElementById('viewHoursContent');
+        const noResultsMessageId = 'no-results-message'; // מזהה עבור הודעה
+        let noResultsMessage = document.getElementById(noResultsMessageId);
+
+        if (!hasResults) {
+            if (!noResultsMessage) {
+                // אם אין הודעה קיימת, יצירת הודעה חדשה
+                noResultsMessage = document.createElement('p');
+                noResultsMessage.id = noResultsMessageId;
+                noResultsMessage.style.textAlign = 'center';
+                noResultsMessage.style.color = 'red';
+                noResultsMessage.textContent = 'לא נמצאו שעות עבודה עבור התאריך שנבחר.';
+                viewHoursContent.appendChild(noResultsMessage);
+            }
+        } else if (noResultsMessage) {
+            // אם יש תוצאות, מחיקת הודעת ה-"אין תוצאות"
+            noResultsMessage.remove();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // פונקציה לשמירת שעות לאחר עדכון
+    async function saveHour(clientId, hourId, index) {
+        const dayOfWorkElement = document.getElementById(`dayOfWork${index}`);
+        const startHourElement = document.getElementById(`startHour${index}`);
+        const endHourElement = document.getElementById(`endHour${index}`);
+
+        const updatedDayOfWork = dayOfWorkElement.value || null;
+        const updatedStartHour = startHourElement.value || null;
+        const updatedEndHour = endHourElement.value || null;
+
+        document.getElementById('loadingMessageViewHours').innerText = 'נא להמתין, עדכון שעות מתבצע...';
+        document.getElementById('loadingMessageViewHours').style.display = 'block';
+
+        const requestBody = {
+            client_id: clientId,
+            hour_id: hourId,
+            worker_id: '{{officeWorker._id}}',
+            day_of_work: updatedDayOfWork,
+            start_hour: updatedStartHour,
+            end_hour: updatedEndHour
+        };
+
+
+        try {
+            const response = await fetch(`/api/workingHours/change`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+            const result = await response.json();
+
+
+                setTimeout(() => {
+                    document.getElementById('loadingMessageViewHours').innerText = 'שעות עודכנו בהצלחה! נא להמתין לריענון הדף...';
+                    window.location.reload(); 
+                }, 2000); // הודעה נשארת למשך 2 שניות
+        } catch (error) {
+            document.getElementById('loadingMessageViewHours').style.display = 'none';
+            console.error('שגיאה בעדכון שעות בעבור שורה ' + (index + 1) + ':', error);
+        }
+    }
+
+
+
+
+
+
+    // פונקציה לשליחת מיילים לרשימת לקוחות נבחרת
+    function sendEmails() {
+        const selectedClients = [];
+        const selectedEmails = [];
+        const checkboxes = document.querySelectorAll('input[name="selectedClients"]:checked');
+
+        checkboxes.forEach(checkbox => {
+            selectedClients.push(checkbox.value);
+            const email = checkbox.parentElement.querySelector('input[name="clientEmail"]').value;
+            selectedEmails.push(email);
+        });
+
+        if (selectedClients.length === 0) {
+            alert("נא לבחור לפחות לקוח אחד.");
+            return;
+        }
+
+        if (selectedEmails.length === 0) {
+            alert("לא נמצאו מיילים בעבור הלקוחות שנבחרו.");
+            return;
+        }
+
+        const emailMessage = document.getElementById('emailMessage').value;
+        if (emailMessage.trim() === '') {
+            alert("נא לכתוב הודעה.");
+            return;
+        }
+
+        // הצגת הודעת טעינה
+        const loadingMessage = document.getElementById('loadingMessageMailing');
+        loadingMessage.style.display = 'block';
+
+        const templateParams = {
+            message: emailMessage,
+            email: selectedEmails.join(','),
+        };
+
+        emailjs.send('service_xsw4gtb', 'template_zns3ipr', templateParams)
+            .then(() => {
+                alert("מייל/ים נשלחו בהצלחה!"); // המתנה לסיום ה-Alert
+                // אחרי ה-alert, הודעת הטעינה נשארת עד שהרענון מתבצע
+                window.location.reload(); // רענון הדף לאחר שליחת המיילים בהצלחה
+            }, (error) => {
+                console.log('Failed to send emails...', error);
+                alert("מיילים לא נשלחו, נא לנסות שנית.");
+            });
+    }
+
+
+
+    // פונקציה לבחירת כל הלקוחות ברשימת הדיוור
+    function toggleSelectAll(selectAllCheckbox) {
+        const checkboxes = document.querySelectorAll('input[name="selectedClients"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    }
+
+    // פונקציה לפתיחת מסמך שנבחר על ידי הלקוח
+    function openDocument(url) {
+        window.open(url);
+    }
+
+    // פונקציה לשליפת שעות העבודה של עובד לפי מזהה
+    async function fetchWorkerHours(workerId) {
+        try {
+            const response = await fetch(`/api/workingHours/worker/${workerId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("data.worker_hours", data.worker_hours);
+                data.worker_hours = data.worker_hours.filter((item) => new Date(item.day_of_work).getMonth() == new Date().getMonth() && new Date(item.day_of_work).getFullYear() == new Date().getFullYear());
+                console.log("data.worker_hours", data.worker_hours);
+                const uniqueWorkingDays = new Set();
+                let totalWorkingHours = 0;
+
+                data.worker_hours.forEach((entry) => {
+                    if (entry.day_of_work) {
+                        uniqueWorkingDays.add(entry.day_of_work);
+                    }
+
+                    if (entry.start_hour && entry.end_hour) {
+                        const [startHour, startMinute] = entry.start_hour.split(':').map(Number);
+                        const [endHour, endMinute] = entry.end_hour.split(':').map(Number);
+
+                        const startInMinutes = startHour * 60 + startMinute;
+                        const endInMinutes = endHour * 60 + endMinute;
+                        const differenceInMinutes = endInMinutes - startInMinutes;
+
+                        const hours = Math.floor(differenceInMinutes / 60);
+                        const minutes = differenceInMinutes % 60;
+                        const fractionalHours = minutes / 60;
+
+                        totalWorkingHours += hours + fractionalHours;
+                    }
+                });
+
+                document.getElementById('workingDays').innerText = uniqueWorkingDays.size;
+                document.getElementById('workingHours').innerText = totalWorkingHours.toFixed(2);
+            } else {
+                document.getElementById('workingDays').innerText = 'Error';
+                document.getElementById('workingHours').innerText = 'Error';
+            }
+        } catch (error) {
+            console.error('Error fetching worker hours:', error);
+            document.getElementById('workingDays').innerText = 'Error';
+            document.getElementById('workingHours').innerText = 'Error';
+        }
+    }
+
+    const workerId = "{{officeWorker._id}}";
+    fetchWorkerHours(workerId);
+
+
+
+
+
+</script>

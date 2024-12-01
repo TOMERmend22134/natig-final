@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* מניעת גלילה אופקית */
+    overflow-y: auto; /* מניעת גלילה אנכית */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    direction: rtl;
+    background-color: #f9f9f9;
+}
+
+.contact-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.contact-section {
+    margin-bottom: 30px;
+    margin-right: 150px;
+}
+
+h2 {
+    color: #003d54;
+}
+
+p {
+    margin: 5px 0;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+#map {
+    margin-right: 55%;
+    margin-top: -430px;
+}
+
+h2:first-child {
+    margin-top: 50px;
+}
+footer {
+    width: 100%;
+}

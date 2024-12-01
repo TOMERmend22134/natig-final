@@ -1,0 +1,183 @@
+body {
+    background-color: #f7f9fc;
+    color: white;
+    line-height: 1.8;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+   max-width: 100%;
+   overflow-x:hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-bottom: 2px solid #e0e0e0;
+    direction: rtl;
+}
+
+header #logo {
+    height: 70px; /* הגדלת הלוגו */
+    cursor: pointer;
+}
+
+header nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    direction: ltr;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 40px; /* רווחים שווים בין הפריטים */
+}
+
+header nav ul li {
+    margin: 0;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #007acc;
+}
+
+
+
+
+
+/* אנימציה */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* עיצוב כותרות */
+section h2 {
+    font-size: 2em;
+    color: #004d66;
+    border-bottom: 3px solid #004d66;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    position: relative;
+    padding-right: 4%; 
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    background-color: #ff9900;
+    bottom: -3px;
+    left: 0;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+/* עיצוב טקסט כללי */
+section p {
+    margin-bottom: 20px;
+    font-size: 1em;
+    color: #555;
+    text-align: right;
+    padding-right: 3%;
+}
+
+/* עיצוב חברי צוות */
+.team-member {
+    margin-bottom: 40px;
+    padding: 20px;
+    color: black;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    line-height: normal;
+    text-align: right;
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+}
+
+.team-member h3 {
+    font-size: 1.6em;
+    color: #333333;
+    margin-bottom: 10px;
+    margin-right: 45px;
+}
+
+.team-member p {
+    margin-bottom: 0;
+    width: 50%;
+}
+/* עיצוב רשימות */
+.advantages ul {
+    list-style-type: square;
+    color: black;
+    padding: 0;
+    padding-right: 20px; /* מוסיף רווח בין הטקסט לשולי הסרגל הימני */
+    list-style-position: inside; 
+    text-align: right;
+}
+
+.advantages ul li {
+    background: url('https://image.flaticon.com/icons/png/512/32/32195.png') no-repeat left center;
+    background-size: 20px;
+    padding-left: 40px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    margin-right: 50px;
+}
+
+
+/* הדגשה מיוחדת */
+.highlight {
+    color: #ff9900;
+    font-weight: bold;
+}
+
+.fix-paragraph {
+    margin-right: 20px;
+}
+.scroll-to-top {
+    background: url('https://api.iconify.design/material-symbols/arrow-circle-up-outline.svg') no-repeat center;
+    content: url('https://api.iconify.design/material-symbols/arrow-circle-up-outline.svg'); 
+    position: fixed;
+    bottom: 110px;
+    left: 25px;
+    background-color: #88ffff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* הכפתור מוסתר כברירת מחדל */
+    background-size: 60px;
+}
+
+
+
+.scroll-to-top:hover {
+    background-color: #93f9f4; /* צבע הכפתור במעבר עכבר */
+}

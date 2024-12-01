@@ -1,0 +1,357 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9f9f9; /* רקע בהיר */
+}
+
+.header-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.content-wrapper {
+    margin: 0 auto;
+    width: 90%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+
+td {
+    color: #666;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* עיצוב כפתור המחיקה */
+#deleteClientButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#deleteClientButton:hover {
+    background-color: #e53935;
+}
+
+#deleteButton, #cancelButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#deleteButton:hover, #cancelButton:hover {
+    background-color: #e53935;
+}
+
+/* עיצוב פופאפ */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px; /* Increased padding for better spacing */
+    background-color: white;
+    border: 1px solid #ddd;
+    z-index: 1000;
+    max-height: 80%;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 500px; /* Reduced max-width to fit smaller screens better */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+form input[type="date"],
+form input[type="time"] {
+    margin-bottom: 15px;
+    width: calc(100% - 20px); /* Ensure inputs are slightly narrower */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+form button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 4px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+/* רקע כהה מאחורי הפופאפ */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 500;
+}
+
+/* ווידג'טים */
+.dashboard-widgets {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.widget {
+    background-color: #f1f1f1;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 30%;
+}
+
+/* הודעה */
+.message-input {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+textarea {
+    width: 95.6%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+#addClientForm {
+    padding-top: 10px;
+}
+
+#addClientForm div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    width: 60%;
+}
+
+#closeClientForm {
+    margin-bottom: 20px;
+}
+
+#addClientForm div input,
+#addClientForm div select {
+    width: 105%;
+}
+
+#loadingMessage {
+    color: #4CAF50;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#addHoursForm {
+    padding-top: 10px;
+}
+
+.close {
+    position: absolute;
+    margin-top: -30px;
+    margin-right: -15px;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Spinner CSS */
+.lds-spinner {
+    color: currentColor;
+    display: inline-block;
+    width: 24px; /* Smaller size */
+    height: 24px;
+    margin-left: 5px; /* Margin between spinner and text */
+    position: relative;
+  }
+  
+  .lds-spinner div {
+    transform-origin: 12px 12px; /* Adjust based on smaller container */
+    animation: lds-spinner 1.2s linear infinite;
+  }
+  
+  .lds-spinner div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 10px; /* Adjust position for smaller spinner */
+    width: 2px;  /* Reduce width */
+    height: 6px; /* Reduce height */
+    border-radius: 20%;
+    background: currentColor;
+  }
+  
+  @keyframes lds-spinner {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
+  .lds-spinner div:nth-child(1) { transform: rotate(0deg); animation-delay: -1.1s; }
+  .lds-spinner div:nth-child(2) { transform: rotate(30deg); animation-delay: -1s; }
+  .lds-spinner div:nth-child(3) { transform: rotate(60deg); animation-delay: -0.9s; }
+  .lds-spinner div:nth-child(4) { transform: rotate(90deg); animation-delay: -0.8s; }
+  .lds-spinner div:nth-child(5) { transform: rotate(120deg); animation-delay: -0.7s; }
+  .lds-spinner div:nth-child(6) { transform: rotate(150deg); animation-delay: -0.6s; }
+  .lds-spinner div:nth-child(7) { transform: rotate(180deg); animation-delay: -0.5s; }
+  .lds-spinner div:nth-child(8) { transform: rotate(210deg); animation-delay: -0.4s; }
+  .lds-spinner div:nth-child(9) { transform: rotate(240deg); animation-delay: -0.3s; }
+  .lds-spinner div:nth-child(10) { transform: rotate(270deg); animation-delay: -0.2s; }
+  .lds-spinner div:nth-child(11) { transform: rotate(300deg); animation-delay: -0.1s; }
+  .lds-spinner div:nth-child(12) { transform: rotate(330deg); animation-delay: 0s; }
+  
+  /* Aligning spinner with the text */
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Spacing between spinner and text */;
+  }
+
+
+  #taxDocumentsList .spinner-container, 
+  #capitalDocumentsList .spinner-container {
+    width: 100%;
+  }
+
+  #content-aligner {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+
+  #content-aligner button {
+    margin: 0;
+    padding: 0px 6px 0px 6px;
+    font-size: 16px;
+  }
+
+  #content-aligner p {
+    margin: 0;
+  }
+
+  ul li button {
+    justify-content: unset;
+  }
+
+  #fix-hours-display {
+    display: block;
+  }
+
+  .work-hour {
+    margin-bottom: 15px;
+  }
+
+  #time-selection {
+    margin-top: 15px;
+  }
+
+  #search-button {
+    margin-right: 10px;
+  }
+
+  #date-input {
+    margin-right: 150px;
+  }
+
+  #hours-title {
+    text-align: center;
+  }
+
+  .treated {
+    color: green;
+}
+
+.untreated {
+    color: red;
+}

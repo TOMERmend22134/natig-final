@@ -1,0 +1,215 @@
+body {
+  padding-right: 20px;
+  margin: 0;
+  overflow-x: hidden;
+  direction: rtl;
+  text-align: right;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p, li {
+  font-size: 16px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    margin-bottom: 5px;
+}
+
+button {
+    background-color: #1E90FF;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: auto; /* הכפתור יתאים לגודל תוכנו */
+    max-width: 150px; /* מקסימום רוחב הכפתור */
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #007acc;
+}
+
+footer {
+    width: 100%;
+    background-color: #003d54;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    color: white;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ddd;
+    z-index: 1000;
+    max-height: 80%;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 500px; /* גודל מתאים למסך קטן */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    padding: 20px;
+    direction: rtl;
+    text-align: right;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+label, select, button, p {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    padding: 10px;
+    width: 100%;
+    max-width: 300px; /* מקסימום רוחב לבחירה */
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #1E90FF;
+    width: auto; /* הכפתור יתאים לגודל תוכנו */
+    max-width: 150px; /* מקסימום רוחב הכפתור */
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #007acc;
+}
+
+#upload-status {
+    color: green;
+    font-weight: bold;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h2 {
+    margin-top: 30px;
+    font-size: 22px;
+    font-weight: bold;
+}
+/* עיצוב כפתור מחיקה */
+button.delete {
+    background-color: #f44336; /* צבע רקע אדום */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px; /* פינות מעוגלות */
+    transition: background-color 0.3s; /* מעבר חלק */
+}
+
+/* עיצוב בזמן ריחוף מעל כפתור המחיקה */
+button.delete:hover {
+    background-color: #e53935; /* גוון כהה יותר של אדום בעת ריחוף */
+}
+
+section {
+    margin-right: 60px;
+}
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+form input[type="text"], 
+form input[type="email"], 
+form input[type="number"], 
+form input[type="password"], 
+form input[type="date"], 
+form input[type="time"], 
+form select {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 4px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* רקע כהה מאחורי הפופאפ */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 500;
+}

@@ -1,0 +1,29 @@
+document.addEventListener("DOMContentLoaded", function() {
+  const cloudinaryRef = window.cloudinary; # יצירת הפניה ל-Cloudinary
+  const widgetRef = cloudinaryRef.createUploadWidget({
+    cloudName: 'natig', # שם הענן ב-Cloudinary
+    uploadPreset: 'NatigDocuments' # שם הפריסט להעלאה
+  }, function (error, res) { # פונקציה שמטפלת בתוצאות ההעלאה
+    if (error) {
+      console.error({ error });
+      return;
+    }
+    handleWidgetEvents(res);
+  });
+
+  function handleWidgetEvents(res) { # פונקציה לטיפול באירועים של ה-Widget
+    if (res.event === "success") {
+      console.log(res.info.secure_url);
+      setImage(res.info.secure_url); # טיפול ב-URL של התמונה שהועלתה
+    }
+  }
+
+  document.getElementById('upload-button').addEventListener('click', function() {
+    widgetRef.open(); # פתיחת ה-Widget כשלוחצים על הכפתור
+  });
+
+  function setImage(url) { # פונקציה שמטפלת ב-URL של התמונה שהועלתה
+    console.log("Image URL:", url);
+    # אפשר להוסיף כאן קוד להצגת התמונה או שמירת ה-URL
+}
+});

@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/static/css/workerLogin.css">
+
+<div class="container">
+    <h1>נתיג</h1>
+    <h1>:התחברות כעובד משרד</h1>
+    <form action="/workerLogin" method="POST">
+        מייל
+        <input type="email" name="email" placeholder="email" required>
+        סיסמה
+        <input type="password" name="password" placeholder="password" required>
+        <div class="error-message" style="display: none;"></div>
+        <button type="submit">התחברות</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorParam = urlParams.get('error');
+        const errorMessage = document.querySelector('.error-message');
+
+        if (errorParam && errorMessage) {
+            errorMessage.textContent = errorParam;
+            errorMessage.style.display = 'block';
+
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+
+        const emailInput = document.querySelector('input[name="email"]');
+        const passwordInput = document.querySelector('input[name="password"]');
+
+        function hideError() {
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        }
+
+        emailInput.addEventListener('focus', hideError);
+        passwordInput.addEventListener('focus', hideError);
+    });
+</script>

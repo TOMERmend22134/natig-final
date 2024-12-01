@@ -1,0 +1,112 @@
+@font-face {
+  font-family: "Heebo";
+  src: url(../fonts/Heebo-VariableFont_wght.ttf);
+}
+
+body {
+  font-family: "Heebo", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* גורם לגוף הדף להתפרש על כל הגובה */
+  
+}
+
+#holder {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: auto; /* מאפשר לתוכן להתפרש ולא לדחוף את ה-footer */
+}
+
+#kuku {
+  background-color: antiquewhite;
+  border-radius: 8px;
+}
+
+#kuku p {
+  margin-left: 15px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  direction: rtl;
+}
+
+header #logo {
+  height: 70px; /* הגדלת הלוגו */
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  margin-right: 20px;
+}
+
+
+header nav {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* ממרכז את הניווט */
+  direction: ltr;
+}
+
+header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 40px; /* רווחים שווים בין הפריטים */
+  margin-right: 25px;
+}
+
+header nav ul li {
+  margin: 0;
+}
+
+header nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+  color: #007acc;
+}
+
+#logo:hover {
+  opacity: 0.8; /* אפקט hover */
+}
+
+#logo:active {
+  transform: scale(0.95); /* אפקט לחיצה */
+}
+
+/* כפתורי התחברות */
+.login-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* הוספת מרווחים בין הכפתורים */
+  margin-bottom: 30px; /* רווח בין הכפתורים ל-footer */
+}
+
+/* עיצוב תחתון */
+footer {
+  background-color: #004d66;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto; /* מבטיח שה-footer ידחף לתחתית הדף */
+  max-width: 100%; /* ודא שה-footer תופס את כל רוחב הדף */
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+  margin: 0;
+}

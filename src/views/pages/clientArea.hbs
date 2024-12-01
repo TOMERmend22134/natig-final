@@ -1,0 +1,336 @@
+<link rel="stylesheet" href="/static/css/clientArea.css">
+
+<h1>ברוך הבא: {{client.client_name}}</h1>
+<p>האימייל שלך: {{client.email}}</p>
+<p>מספר נייד: {{client.mobile_number}}</p>
+{{#if client.home_number}}
+<p>מספר טלפון בבית: {{client.home_number}}</p>
+{{/if}}
+<p>מספר תיק מס הכנסה: {{client.income_tax_file}}</p>
+<p>מספר תיק מע"מ: {{client.vat_file_number}}</p>
+<p>הכתובת שלך:</p>
+<ul>
+  <li>עיר: {{client.address.city}}</li>
+  <li>רחוב: {{client.address.street}}</li>
+  <li>מספר: {{client.address.number}}</li>
+  {{#if client.address.zip_code}}
+  <li>מיקוד: {{client.address.zip_code}}</li>
+  {{/if}}
+</ul>
+
+<!-- כפתור להעלאת טופס לדוח מס -->
+<button id="open-popup">העלה טופס לדוח מס</button>
+
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <span class="close" id="close-upload-popup">&times;</span>
+    <h2>בחר טופס להעלאה לדוח מס</h2>
+    <label for="form-select">בחר טופס:</label>
+    <select id="form-select">
+      <option value="form106Couple">1. טופסי 106 של שני בני הזוג מכל מקומות עבודה</option>
+      <option value="taxSpread">2. אישורים על פריסת מס</option>
+      <option value="form867">3. טופס 867 מהבנקים על ניכוי מס במקור</option>
+      <option value="otherIncomeSources">4. אישורים על הכנסות אחרות מהארץ ומחול: הכנסות משוק ההון, ריבית, דיבידנד,מימוש תוכניות חסכון, דמי שכירות בארץ ובחול, רווח מניירות ערך וכו</option>
+      <option value="pensionCertificates">5. אישורים על קצבאות ממעבידים (פנסיה)</option>
+      <option value="nationalInsurancePayments">6. אישורים על תקבולים מהביטוח הלאומי (תגמולי מילואים, דמי לידה, דמיאבטלה, דמי פגיעה בעבודה, הבטחת הכנסה, קצבת נכות, קצבת זקנה)</option>
+      <option value="otherSources">7. אישורים על הכנסה מכל מקור אחר כגון: רנטה, משרד הביטחון</option>
+      <option value="prizeIncome">8. אישורים על זכיות בפרסים, השתתפות בהגרלות או בפעילות נושאת פרסים</option>
+      <option value="inheritanceGifts">9. מסמכים על ירושות, כספים פרטיים שהתקבלו במתנה, סכומים שנתקבלו מהמשפחה</option>
+      <option value="severanceAndFunds">10. אישורים על קבלת פיצויי פיטורין, מימוש קרן השתלמות, מימוש קופות גמל</option>
+      <option value="rentalIncome">11. אישור על הכנסות משכר דירה למגורים (כולל חוזה שכירות)</option>
+      <option value="anyOtherIncome">12. כל הכנסה אחרת שהייתה לך ולבן/בת זוגך שלא הוזכרה לעיל</option>
+      <option value="studyFundDeposits">13. אישור על הפקדות לקרן השתלמות</option>
+      <option value="retirementSavings">14. אישור על הפקדות: לקופת תגמולים שלך, לקרן פנסיה, לביטוח חיים (כולל של בן/בת הזוג וילדים)</option>
+      <option value="disabilityInsurance">15. אישור תשלום פרמיות לביטוח אובדן כושר עבודה</option>
+      <option value="charityReceipts">16. קבלות על תשלום תרומות למוסדות ציבוריים שאושרו על ידי נציבות מס הכנסה</option>
+      <option value="selfNationalInsurance">17. אישור על תשלומים למוסד לביטוח לאומי כעצמאי/ת</option>
+      <option value="borderTownResident">18. אישור מועצה/עירייה על מגורים ביישוב ספר בשנת המס 2023</option>
+      <option value="taxWithholding">19. אישור ניכוי מס במקור שנוכה במהלך השנה</option>
+      <option value="specialNeedsChildren">20. אישור רפואי על טיפול בילדים נטולי יכולת (לימודים בחינוך מיוחד)</option>
+      <option value="familyInCare">21. אישור על אחזקת קרוב במוסד (כולל טופס 127, תעודה רפואית והוצאות אחזקה)</option>
+      <option value="higherEducation">22. אישור על לימודים ממוסד להשכלה גבוהה</option>
+      <option value="mortgagePayments">23. אישור שנתי מהבנק על תשלומי המשכנתא (כולל ביטוח חיים)</option>
+      <option value="retirementAndLifeInsurance">24. אישור על הפקדות לקופת תגמולים, לקרן פנסיה, ולביטוח חיים</option>
+      <option value="disabilityPremiums">25. אישור תשלום פרמיות לביטוח אובדן כושר עבודה</option>
+      <option value="charityDonations">26. קבלות על תשלום תרומות למוסדות ציבוריים שאושרו על ידי נציבות מס הכנסה</option>
+      <option value="selfInsurancePayments">27. אישור על תשלומים למוסד לביטוח לאומי כעצמאי/ת</option>
+      <option value="borderResidence">28. אישור מועצה/עירייה על מגורים ביישוב ספר בשנת המס (ביישובים הרלוונטיים בלבד)</option>
+    </select>
+    <button id="upload-button" data-id="{{client._id}}" style="background-color: #007bff; color: white;">העלה</button>
+    <!-- כפתור בצבע כחול -->
+    <p id="upload-status" style="color: blue; display: none;"></p> <!-- הודעת הצלחה בצבע כחול -->
+  </div>
+</div>
+
+<!-- כפתור להעלאת טופס להצהרת הון -->
+<button id="open-wealth-popup">העלה טופס להצהרת הון</button>
+
+<div id="wealthDeclarationPopup" class="popup">
+  <div class="popup-content">
+    <span class="close" id="close-wealth-declaration-popup">&times;</span>
+    <h2>בחר טופס להעלאה להצהרת הון</h2>
+    <label for="wealth-form-select">בחר טופס:</label>
+    <select id="new-wealth-form-select">
+      <option value="bankApprovals">1. אישורים מכל הבנקים ליום 31/12 בארץ ובחול</option>
+      <option value="realEstateInvestments">2. השקעות בנכסי דלא ניידי</option>
+      <option value="vehiclesAndMachines">3. כלי רכב וכלים ממונעים אחרים</option>
+      <option value="cashOnHand">4. מזומנים ביד</option>
+      <option value="foreignCurrencyOnHand">5. מטבע חוץ ביד</option>
+      <option value="milvaCertificates">6. תעודות מלווה חובה</option>
+      <option value="privateDebtors">7. חייבים פרטיים – שמות, תאריכי היווצרות החוב, סכומים ואישורים מהחייבים</option>
+      <option value="householdContents">8. תכולת הבית, רשימה של תכולה עם עלות רכישה</option>
+      <option value="mortgageLiabilities">9. התחייבויות בגין משכנתא – אישורים של יתרת הקרן מהבנק</option>
+      <option value="vehiclePurchaseLiabilities">10. התחייבויות עבור רכישת מכוניות וכלי רכב</option>
+      <option value="loanDetails">11. הלוואות : לציין את תנאי ההלוואה : תאריך היווצרות החוב, ריבית , הצמדה ותנאי הפירעון</option>
+      <option value="privateCreditors">12. זכאים פרטיים, שמות ותאריכי היווצרות החוב, סכומים ואישורים</option>
+    </select>
+    <button id="upload-wealth-declaration-button" data-id="{{client._id}}"
+      style="background-color: #007bff; color: white;">העלה</button> <!-- כפתור בצבע כחול -->
+    <p id="wealth-upload-status" style="color: blue; display: none; font-weight: bold;"></p> <!-- הודעת הצלחה בצבע כחול -->
+  </div>
+</div>
+
+<!-- כפתור עריכת פרטים -->
+<button id="edit-details-button">עריכת פרטים</button>
+
+<!-- פופאפ לעריכת פרטי הלקוח -->
+<div id="editClientPopup" class="popup" style="display: none;">
+  <div class="popup-content">
+    <span class="close" id="close-edit-client-popup">&times;</span>
+    <h2>עריכת פרטי הלקוח</h2>
+    <form id="editClientForm">
+      <input type="hidden" id="editClientId" value="{{client._id}}">
+      <div>
+        <label for="edit_client_name">שם לקוח:</label>
+        <input type="text" id="edit_client_name" value="{{client.client_name}}" required>
+      </div>
+      <div>
+        <label for="edit_mobile_number">מספר טלפון נייד:</label>
+        <input type="text" id="edit_mobile_number" value="{{client.mobile_number}}" required>
+      </div>
+      <div>
+        <label for="edit_home_number">מספר טלפון ביתי:</label>
+        <input type="text" id="edit_home_number" value="{{client.home_number}}">
+      </div>
+      <div>
+        <label for="edit_city">עיר:</label>
+        <input type="text" id="edit_city" value="{{client.address.city}}" required>
+      </div>
+      <div>
+        <label for="edit_street">רחוב:</label>
+        <input type="text" id="edit_street" value="{{client.address.street}}" required>
+      </div>
+      <div>
+        <label for="edit_number">מספר:</label>
+        <input type="number" id="edit_number" value="{{client.address.number}}" required>
+      </div>
+      <div>
+        <label for="edit_zip_code">מיקוד:</label>
+        <input type="text" id="edit_zip_code" value="{{client.address.zip_code}}">
+      </div>
+
+      <!-- פסקה להצגת הודעת סטטוס בצבע כחול -->
+      <p id="edit-status" style="color: blue; display: none;"></p>
+
+      <!-- כפתור שמירת פרטים בצבע כחול -->
+      <button type="submit" id="saveClientDetailsButton"
+        style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+        שמירת פרטים
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+<script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+<script type="module">
+
+  // סגירת פופאפ העלאת טופס לדוח מס
+  document.getElementById("close-upload-popup").onclick = function () {
+    document.getElementById("popup").style.display = "none";
+    document.getElementById('upload-status').textContent = ""; // איפוס הודעת סטטוס
+  };
+
+  // סגירת פופאפ הצהרת הון
+  document.getElementById("close-wealth-declaration-popup").onclick = function () {
+    document.getElementById("wealthDeclarationPopup").style.display = "none";
+    document.getElementById('wealth-upload-status').textContent = ""; // איפוס הודעת סטטוס
+  };
+
+  // סגירת פופאפ עריכת פרטים
+  document.getElementById("close-edit-client-popup").onclick = function () {
+    document.getElementById("editClientPopup").style.display = "none";
+  };
+
+  // פתיחת פופאפ העלאת טופס לדוח מס
+  document.getElementById("open-popup").onclick = function () {
+    document.getElementById("popup").style.display = "block";
+  };
+
+  // פתיחת פופאפ העלאת טופס להצהרת הון
+  document.getElementById("open-wealth-popup").onclick = function () {
+    document.getElementById("wealthDeclarationPopup").style.display = "block";
+  };
+
+  // פונקציה לפתיחת הפופאפ
+  document.getElementById("edit-details-button").onclick = function () {
+    document.getElementById("editClientPopup").style.display = "block"; // הצגת הפופאפ
+  };
+
+  // פונקציה לסגירת הפופאפ
+  document.getElementById("close-edit-client-popup").onclick = function () {
+    document.getElementById("editClientPopup").style.display = "none"; // הסתרת הפופאפ
+  };
+
+  // מאזין ללחיצה על כפתור שמירת פרטים
+  document.getElementById("saveClientDetailsButton").onclick = async function (event) {
+    event.preventDefault(); // מניעת התנהגות ברירת המחדל של הטופס
+
+    // איסוף הנתונים
+    const clientId = document.getElementById("editClientId").value;
+    const updatedClientData = {
+      client_name: document.getElementById("edit_client_name").value,
+      mobile_number: document.getElementById("edit_mobile_number").value,
+      home_number: document.getElementById("edit_home_number").value,
+      address: {
+        city: document.getElementById("edit_city").value,
+        street: document.getElementById("edit_street").value,
+        number: document.getElementById("edit_number").value,
+        zip_code: document.getElementById("edit_zip_code").value
+      }
+    };
+
+    // הצגת הודעת סטטוס בפופאפ מיד
+    const statusMessage = document.getElementById('edit-status');
+    statusMessage.textContent = "הפרטים עודכנו בהצלחה!";
+    statusMessage.style.color = "blue";
+    statusMessage.style.display = 'block'; // הצגת ההודעה בפופאפ
+
+    try {
+      const response = await fetch(`/api/clients/${clientId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedClientData)
+      });
+
+      // טיפול בתגובה מהשרת
+      if (response.ok) {
+        // הצגת הודעת alert למשתמש לאחר שההודעה כבר הוצגה בפופאפ
+        alert("הפרטים עודכנו בהצלחה!");
+
+        // רענון הדף לאחר אישור ה-alert, מבלי לנתק מהחשבון
+        location.reload(); // רענון הדף
+      } else {
+        statusMessage.textContent = "שגיאה בעדכון הפרטים.";
+        statusMessage.style.color = "blue";
+        statusMessage.style.display = 'block';
+      }
+    } catch (error) {
+      console.error("שגיאה בעדכון הפרטים:", error);
+      statusMessage.textContent = "שגיאה בעדכון הפרטים.";
+      statusMessage.style.color = "blue";
+      statusMessage.style.display = 'block';
+    }
+  };
+
+
+
+
+
+
+  // פתיחת ווידגט Cloudinary להעלאת מסמכים לדוח מס
+  document.querySelector('#upload-button').addEventListener('click', (event) => {
+    let selectType = document.querySelector('#form-select');
+    let fileType = selectType.options[selectType.selectedIndex].textContent;
+
+    cloudinary.openUploadWidget({
+      cloudName: "natig",
+      uploadPreset: "NatigDocuments",
+      folder: `NatigDocuments/clients/${event.target.dataset.id}/${fileType}`
+    }, (error, res) => {
+      if (error) {
+        console.error({ error });
+        document.getElementById('upload-status').textContent = "שגיאה בהעלאת הקובץ.";
+        document.getElementById('upload-status').style.display = 'block';
+        return;
+      }
+      handleWidgetEvents(res, fileType);
+    });
+  });
+
+  // פונקציה שמטפלת באירועי ווידגט העלאת מסמכים לדוח מס
+  function handleWidgetEvents(res, fileName) {
+    if (res.event === "success") {
+      console.log("Uploaded URL:", res.info.secure_url);
+      saveDocToDB("{{client._id}}", res.info.secure_url, res.info.public_id, fileName);
+      document.getElementById('upload-status').textContent = "הקובץ הועלה בהצלחה!";
+      document.getElementById('upload-status').style.display = 'block'; // הודעה בצבע כחול
+    }
+  }
+
+  // פתיחת ווידגט Cloudinary להצהרת הון
+  document.querySelector('#upload-wealth-declaration-button').addEventListener('click', (event) => {
+    let selectType = document.querySelector('#new-wealth-form-select');
+    let fileType = selectType.options[selectType.selectedIndex].textContent;
+
+    cloudinary.openUploadWidget({
+      cloudName: "natig",
+      uploadPreset: "NatigDocuments",
+      folder: `NatigDocuments/clients/${event.target.dataset.id}/${fileType}`
+    }, (error, res) => {
+      if (error) {
+        console.error({ error });
+        document.getElementById('wealth-upload-status').textContent = "שגיאה בהעלאת הקובץ.";
+        document.getElementById('wealth-upload-status').style.display = 'block';
+        return;
+      }
+      handleWidgetEventsWealth(res, fileType);
+    });
+  });
+
+  // פונקציה שמטפלת באירועי ווידגט להצהרת הון
+  function handleWidgetEventsWealth(res, fileName) {
+    if (res.event === "success") {
+      console.log("Uploaded URL:", res.info.secure_url);
+      saveDocToDBWealth("{{client._id}}", res.info.secure_url, res.info.public_id, fileName);
+      document.getElementById('wealth-upload-status').textContent = "הקובץ הועלה בהצלחה!";
+      document.getElementById('wealth-upload-status').style.display = 'block'; // הודעה בצבע כחול
+    }
+  }
+
+
+  // שמירת מסמכים במסד הנתונים לאחר העלאה
+  async function saveDocToDB(id, Document_url, Document_name, fileName) {
+    const doc = { Document_url, fileName, Document_name };
+    const response = await fetch(`/api/clients/${id}/documents`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doc)
+    });
+    const data = await response.json();
+    console.log("Response from API: ", data);
+    console.log("data", data);
+  }
+
+  // שמירת מסמכים להצהרת הון במסד הנתונים לאחר העלאה
+  async function saveDocToDBWealth(id, Document_url, Document_name, fileName) {
+    const doc = { Document_url, fileName, Document_name };
+    const response = await fetch(`/api/clients/${id}/wealth-documents`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doc)
+    });
+    const data = await response.json();
+    console.log("Wealth data", data);
+  }
+</script>
